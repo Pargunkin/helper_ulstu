@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile
 
 import config
-import state
+import state as app_state
 from keyboards import (
     get_abitur_menu,
     get_back_menu,
@@ -57,11 +57,11 @@ async def send_cached_photo(
             )
             logging.info("[CACHE] Файл '%s' отправлен из кэша.", filename)
 
-        state.last_messages[message.chat.id] = sent_message.message_id
+        app_state.last_messages[message.chat.id] = sent_message.message_id
     except Exception:
         logging.exception("Ошибка при отправке медиа '%s'.", filename)
         sent_message = await message.answer(text=caption, reply_markup=keyboard)
-        state.last_messages[message.chat.id] = sent_message.message_id
+        app_state.last_messages[message.chat.id] = sent_message.message_id
 
 
 async def send_text_menu(
@@ -71,7 +71,7 @@ async def send_text_menu(
 ) -> None:
     await delete_previous_bot_message(message.bot, message.chat.id)
     sent_message = await message.answer(text=text, reply_markup=keyboard)
-    state.last_messages[message.chat.id] = sent_message.message_id
+    app_state.last_messages[message.chat.id] = sent_message.message_id
 
 
 async def send_main_menu(message: types.Message, text: str) -> None:
@@ -79,8 +79,8 @@ async def send_main_menu(message: types.Message, text: str) -> None:
 
 
 @router.message(Command("start"), F.chat.type == "private")
-async def cmd_start(message: types.Message, fsm: FSMContext) -> None:
-    await fsm.clear()
+async def cmd_start(message: types.Message, state: FSMContext) -> None:
+    await state.clear()
     await safe_delete(message)
     await send_main_menu(message, MAIN_MENU_TEXT)
 
@@ -106,8 +106,8 @@ async def process_student(callback: types.CallbackQuery) -> None:
 
 
 @router.callback_query(F.data == "menu_main", F.message.chat.type == "private")
-async def process_back(callback: types.CallbackQuery, fsm: FSMContext) -> None:
-    await fsm.clear()
+async def process_back(callback: types.CallbackQuery, state: FSMContext) -> None:
+    await state.clear()
     await send_main_menu(callback.message, MAIN_MENU_TEXT)
     await safe_answer(callback)
 
@@ -133,7 +133,7 @@ async def process_stubs(callback: types.CallbackQuery) -> None:
 
 
 @router.message(F.chat.type == "private")
-async def catch_all_messages(message: types.Message, fsm: FSMContext) -> None:
-    await fsm.clear()
+async def catch_all_messages(message: types.Message, state: FSMContext) -> None:
+    await state.clear()
     await safe_delete(message)
     await send_main_menu(message, MAIN_MENU_TEXT)
