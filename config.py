@@ -65,8 +65,8 @@ except ValueError:
 
 MEDIA_CACHE: dict[str, str] = {}
 
-IMG_BANNER = "images/banner.png"
-IMG_ABOUT = "images/about.png"
+IMG_BANNER = "images/banner.jpg"
+IMG_ABOUT = "images/about.jpg"
 IMG_FAQ_EXAMPLE = "images/faq/example.jpg"
 IMG_FAQ_LIST = "images/faq/list.jpg"
 
