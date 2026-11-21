@@ -69,7 +69,7 @@ MEDIA_CACHE: dict[str, str] = {}
 IMG_BANNER = "images/banner.png"
 IMG_ABOUT = "images/about.png"
 IMG_FAQ_EXAMPLE = "images/faq/example.png"
-
+IMG_FAQ_LIST = "images/faq/list.png"
 
 def validate_config() -> Settings:
     errors: list[str] = []
