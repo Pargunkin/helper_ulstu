@@ -8,7 +8,8 @@ ICON_BACK = "5451872399953802324"
 ICON_BACK_FAQ = "5436113877181941026"
 ICON_READ = "5445267414562389170"
 
-ICON_STIPEND = "5197434882321567830"
+ICON_TRANSLATE = "5305720405242159172"
+ICON_TRANSFER = "5323772371830588991"
 ICON_DORM = "5397782960512444700"
 ICON_EXPELLED = "5447544503143504937"
 ICON_QUEEN = "5449698107119904829"
@@ -104,10 +105,10 @@ def get_faq_menu():
         ],
         [
             types.InlineKeyboardButton(text="Что такое БРС?", callback_data="faq_brs", icon_custom_emoji_id=ICON_BOOK),
-            types.InlineKeyboardButton(text="Перевод на бюджет", callback_data="faq_transfer", icon_custom_emoji_id=ICON_STIPEND)
+            types.InlineKeyboardButton(text="Смена направления", callback_data="faq_transfer", icon_custom_emoji_id=ICON_TRANSFER)
         ],
         [
-            types.InlineKeyboardButton(text="Сленг для учебы", callback_data="faq_slang", icon_custom_emoji_id=ICON_CHAT),
+            types.InlineKeyboardButton(text="Сленг для учебы", callback_data="faq_slang", icon_custom_emoji_id=ICON_TRANSLATE),
             types.InlineKeyboardButton(text="Академ. отпуск", callback_data="faq_academic", icon_custom_emoji_id=ICON_QUEEN)
         ],
         [
