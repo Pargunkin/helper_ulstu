@@ -63,13 +63,12 @@ except ValueError:
     ADMIN_GROUP_ID = None
     _ADMIN_GROUP_ID_ERROR = "ADMIN_GROUP_ID должен быть целым числом."
 
-
 MEDIA_CACHE: dict[str, str] = {}
 
 IMG_BANNER = "images/banner.png"
 IMG_ABOUT = "images/about.png"
-IMG_FAQ_EXAMPLE = "images/faq/example.png"
-IMG_FAQ_LIST = "images/faq/list.png"
+IMG_FAQ_EXAMPLE = "images/faq/example.jpg"
+IMG_FAQ_LIST = "images/faq/list.jpg"
 
 def validate_config() -> Settings:
     errors: list[str] = []
