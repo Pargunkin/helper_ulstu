@@ -70,12 +70,8 @@ async def process_faq_menu(callback: types.CallbackQuery):
     await delete_previous_bot_message(callback.bot, callback.message.chat.id)
 
     sent_message = await callback.message.answer(
-        text=(
-            "<tg-emoji emoji-id='5436113877181941026'>❓</tg-emoji> "
-            "<b>Часто задаваемые вопросы (<i>FAQ</i>)</b>\n\n"
-            "Выбери вопрос или категорию, которые тебя интересуют."
-        ),
-        reply_markup=get_faq_menu(),
+        text="<tg-emoji emoji-id='5436113877181941026'>❓</tg-emoji> <b>Часто задаваемые вопросы (<i>FAQ</i>)</b>\n\nВыбери <b>вопрос</b> или <b>категорию</b>, которые тебя интересуют, нажав на кнопку ниже...",
+        reply_markup=get_faq_menu()
     )
     bot_state.last_messages[callback.message.chat.id] = sent_message.message_id
     await safe_answer(callback)
