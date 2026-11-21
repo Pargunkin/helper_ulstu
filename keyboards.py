@@ -8,11 +8,13 @@ ICON_BACK = "5451872399953802324"
 ICON_BACK_FAQ = "5436113877181941026"
 ICON_READ = "5445267414562389170"
 
+ICON_RESOURCES = "5447410659077661506"
 ICON_TRANSLATE = "5305720405242159172"
+ICON_PROGRAMMING = "5231018528689108942"
 ICON_TRANSFER = "5323772371830588991"
 ICON_DORM = "5397782960512444700"
 ICON_EXPELLED = "5447544503143504937"
-ICON_QUEEN = "5449698107119904829"
+ICON_QUEEN = "5265002646397285605"
 ICON_SPORT = "5377505475015235101"
 ICON_HELP = "5386535377467094223"
 ICON_BOOK = "5341498088408234504"
@@ -108,7 +110,7 @@ def get_faq_menu():
             types.InlineKeyboardButton(text="Смена направления", callback_data="faq_transfer", icon_custom_emoji_id=ICON_TRANSFER)
         ],
         [
-            types.InlineKeyboardButton(text="Сленг для учебы", callback_data="faq_slang", icon_custom_emoji_id=ICON_TRANSLATE),
+            types.InlineKeyboardButton(text="Сленг для учёбы", callback_data="faq_slang", icon_custom_emoji_id=ICON_TRANSLATE),
             types.InlineKeyboardButton(text="Академ. отпуск", callback_data="faq_academic", icon_custom_emoji_id=ICON_QUEEN)
         ],
         [
@@ -182,6 +184,58 @@ def get_faq_expelled_keyboard():
                 text="Академ. отпуск", 
                 callback_data="faq_academic",
                 icon_custom_emoji_id=ICON_QUEEN
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+def get_faq_slang_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад в FAQ", 
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            ),
+            types.InlineKeyboardButton(
+                text="Программистский сленг", 
+                callback_data="faq_prog_slang",
+                icon_custom_emoji_id=ICON_PROGRAMMING
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+def get_faq_prog_slang_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад в сленг", 
+                callback_data="faq_slang",
+                icon_custom_emoji_id=ICON_TRANSLATE
+            ),
+            types.InlineKeyboardButton(
+                text="Назад в FAQ", 
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            )
+            
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+def get_faq_friends_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад в FAQ", 
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            ),
+            types.InlineKeyboardButton(
+                text="Ресурсы", 
+                callback_data="student_resources", 
+                icon_custom_emoji_id=ICON_RESOURCES
             )
         ]
     ]

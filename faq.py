@@ -9,6 +9,9 @@ from keyboards import (
     get_faq_expelled_keyboard,
     get_faq_menu,
     get_faq_survive_keyboard,
+    get_faq_slang_keyboard,
+    get_faq_prog_slang_keyboard,
+    get_faq_friends_keyboard,
 )
 from utils import delete_previous_bot_message, safe_answer
 
@@ -66,7 +69,7 @@ FAQ_TEXTS = {
 <tg-emoji emoji-id='5210956306952758910'>👀</tg-emoji> <i>На скриншоте выше вы можете увидеть, как <b>выглядят списки</b> и <b>как с ними нужно работать</b>...</i>"
 """,
 
-    # Перевод на бюджет
+    # Перевод на другое направление
     "faq_transfer": """<tg-emoji emoji-id='5323772371830588991'>🫡</tg-emoji> <b>Смена направления</b>
 
 <i>Пока не готово, так как нужно поинтересоваться у деканата...</i>
@@ -109,8 +112,55 @@ FAQ_TEXTS = {
 <tg-emoji emoji-id='5422535853471709738'>‼️</tg-emoji> <b>Чилл (<i>to chill</i>)</b> — расслабленное состояние, отдых
 <tg-emoji emoji-id='5273804541920299303'>‼️</tg-emoji> <b>Жиза (<i>relatable</i>)</b> — жизненная, узнаваемая ситуация
 """,
-    "faq_academic": "Не доделал...",
-    "faq_friends": "Не доделал...",
+    
+    # Программистский сленг
+    "faq_prog_slang": """<tg-emoji emoji-id='5231018528689108942'>🖥</tg-emoji> <b>Сленг для программистов</b>
+
+<tg-emoji emoji-id='5276017910366610357'>‼️</tg-emoji> <b>Баг, фиксить, дебажить (<i>bug, fix, debug</i>)</b> — ошибка в программе, исправлять и искать её
+<tg-emoji emoji-id='5276245341769836476'>‼️</tg-emoji> <b>Фича (<i>feature</i>)</b> — функция продукта
+<tg-emoji emoji-id='5274194048209398109'>‼️</tg-emoji> <b>Таск (<i>task</i>)</b> — задача в трекере
+<tg-emoji emoji-id='5274260822065948801'>‼️</tg-emoji> <b>Дедлайн (<i>deadline</i>)</b> — срок сдачи
+<tg-emoji emoji-id='5275985324449736372'>‼️</tg-emoji> <b>Релиз, хотфикс (<i>release, hotfix</i>)</b> — выпуск версии, срочное исправление критического бага
+<tg-emoji emoji-id='5274182881294429839'>‼️</tg-emoji> <b>Кранч (<i>crunch</i>)</b> — аврал, большой объём работы в сжатые сроки
+<tg-emoji emoji-id='5276104617166383228'>‼️</tg-emoji> <b>Техдолг (<i>technical debt</i>)</b> — последствия быстрых временных решений, которые потом усложняют жизнь
+<tg-emoji emoji-id='5274249418927778366'>‼️</tg-emoji> <b>Легаси (<i>legacy code</i>)</b> — старый код, который никто не понимает, но все боятся трогать
+<tg-emoji emoji-id='5273831677523666619'>‼️</tg-emoji> <b>Коммит, репа, ПР (<i>commit, repo, PR</i>)</b> — зафиксировать изменения, хранилище кода, пулл−реквест на проверку
+<tg-emoji emoji-id='5276225391646746856'>‼️</tg-emoji> <b>Деплой, задеплоить (<i>deploy</i>)</b> — выложить новую версию на сервер
+<tg-emoji emoji-id='5276362508477670577'>‼️</tg-emoji> <b>Продакшн (<i>prod, production</i>)</b> — рабочая среда, то, что видят реальные пользователи
+<tg-emoji emoji-id='5274095401400543889'>‼️</tg-emoji> <b>Бэкап (<i>backup</i>)</b> — резервная копия
+<tg-emoji emoji-id='5275997792739796367'>‼️</tg-emoji> <b>Джун, мидл, сеньор (<i>junior, middle, senior</i>)</b> — уровни опыта
+<tg-emoji emoji-id='5275968333559113658'>‼️</tg-emoji> <b>Фронт, бэк, фулстек (<i>frontend, backend, fullstack</i>)</b> — видимая часть, серверная часть и универсал
+<tg-emoji emoji-id='5273944557854140615'>‼️</tg-emoji> <b>Вайб−кодинг (<i>vibe coding</i>)</b> — быстрое программирование «по вайбу», часто с опорой на нейросети
+<tg-emoji emoji-id='5276516203882359646'>‼️</tg-emoji> <b>Кланкер (<i>clanker</i>)</b> — уничижительное название для ИИ, робота или «бездушного» автоматизированного решения
+<tg-emoji emoji-id='5274085806443604103'>‼️</tg-emoji> <b>Таскмаскинг (<i>taskmasking</i>)</b> — имитация бурной деятельности: человек выглядит занятым, но реально ничего полезного не делает
+<tg-emoji emoji-id='5276129669710619845'>‼️</tg-emoji> <b>Аура−фарминг (<i>aura farming</i>)</b> — создание продуманного «естественно крутого» образа без явной демонстрации усилий
+<tg-emoji emoji-id='5276271425106225527'>‼️</tg-emoji> <b>Эйджентик−инжиниринг (<i>agentic engineering</i>)</b> — управление ИИ−агентами, которые сами планируют и выполняют задачи; «взрослая» альтернатива вайб−кодингу
+<tg-emoji emoji-id='5273862751612052806'>‼️</tg-emoji> <b>Слоп (<i>slop</i>)</b> — низкокачественный код или контент, сгенерированный ИИ без должной проверки
+<tg-emoji emoji-id='5273923022888119233'>‼️</tg-emoji> <b>Галлюцинация (<i>hallucination</i>)</b> — уверенный, но неверный ответ нейросети
+<tg-emoji emoji-id='5276244843553630595'>‼️</tg-emoji> <b>Промпт−инжиниринг (<i>prompt engineering</i>)</b> — составление запросов к нейросети так, чтобы получить нужный результат
+""",
+
+    # Академический отпуск
+    "faq_academic": """<tg-emoji emoji-id='5265002646397285605'>🏫</tg-emoji> <b>Академический отпуск</b>
+
+<i>Пока не готово, так как нужно поинтересоваться у деканата...</i>
+""",
+
+    # Как найти друзей
+    "faq_friends": """<tg-emoji emoji-id='5443038326535759644'>💬</tg-emoji> <b>Как найти друзей?</b>
+
+Психология банальна, но работает: людям становится близок тот, с кем они <b>часто пересекаются в одном месте и делают одно дело</b>. Поэтому формула такая: <b>постоянные точки пересечения</b> <tg-emoji emoji-id='5381819718124452001'>➡️</tg-emoji> <b>общее дело</b> <tg-emoji emoji-id='5381819718124452001'>➡️</tg-emoji> <b>время</b>. Не «стать душой компании за первую неделю», а стабильно появляться там, где те же люди. Отсюда рекомендуем ознакомиться с <i>общими чатами</i> <a href='https://yandex.ru/maps/-/CXWtmR94'>УлГТУ</a> на различные тематики и с прочими <i>социальными сетями</i>, где можно найти знакомства.
+
+<tg-emoji emoji-id='5332724926216428039'>📇</tg-emoji> Базой может служить <b>беседа</b> твоего направления или других направлений, а также <b>каналы</b>, связанные с общественной деятельностью или прочими развлечениями. Ссылки на них можешь найти в разделе «<tg-emoji emoji-id='5447410659077661506'>🌐</tg-emoji> <b>Ресурсы</b>».
+
+<tg-emoji emoji-id='5445044153572411510'>🍬</tg-emoji> Если желаешь более <b>«прямолинейный подход»</b>, вот тебе несколько вариантов:
+<tg-emoji emoji-id='5192761820464589480'>💝</tg-emoji> <b><a href='https://t.me/leomatchbot'>Дайвинчик</a></b> — чат–бот для знакомств
+<tg-emoji emoji-id='5192753492523004571'>💝</tg-emoji> <b><a href='https://t.me/bibinto_bot'>Бибинто</a></b> — чат–бот для оценивания внешности
+<tg-emoji emoji-id='5192867974876278993'>💝</tg-emoji> <b><a href='https://dating.vk.ru'>ВК знакомства</a></b> — сервис для поиска друзей, романтических партнёров или единомышленников внутри экосистемы ВКонтакте
+<tg-emoji emoji-id='5190832375126341100'>💝</tg-emoji> <b><a href='https://www.mamba.ru/ru'>Mamba</a></b> — крупная российская платформа для онлайн–знакомств и общения
+<tg-emoji emoji-id='5190495924568240622'>💝</tg-emoji> <b><a href='https://twinby.ru'>Twinby</a></b> — российское мобильное приложение для онлайн–знакомств
+""",
+
     "faq_study_places": "Не доделал...",
     "faq_smile": "Не доделал...",
     "faq_ask_admin": "Не доделал...",
@@ -139,6 +189,12 @@ async def process_faq_item(callback: types.CallbackQuery):
         reply_markup = get_faq_survive_keyboard()
     elif callback.data == "faq_expelled":
         reply_markup = get_faq_expelled_keyboard()
+    elif callback.data == "faq_slang":
+        reply_markup = get_faq_slang_keyboard()
+    elif callback.data == "faq_prog_slang":
+        reply_markup = get_faq_prog_slang_keyboard()
+    elif callback.data == "faq_friends":
+        reply_markup = get_faq_friends_keyboard()
     else:
         reply_markup = get_faq_back_button()
 
