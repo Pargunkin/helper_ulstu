@@ -69,6 +69,9 @@ IMG_BANNER = "images/banner.jpg"
 IMG_ABOUT = "images/about.jpg"
 IMG_FAQ_EXAMPLE = "images/faq/example.jpg"
 IMG_FAQ_LIST = "images/faq/list.jpg"
+IMG_FAQ_PLACES_1 = "images/faq/places_1.jpg"
+IMG_FAQ_PLACES_2 = "images/faq/places_2.jpg"
+IMG_FAQ_PLACES_3 = "images/faq/places_3.jpg"
 
 def validate_config() -> Settings:
     errors: list[str] = []

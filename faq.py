@@ -12,6 +12,7 @@ from keyboards import (
     get_faq_slang_keyboard,
     get_faq_prog_slang_keyboard,
     get_faq_friends_keyboard,
+    get_faq_study_places_keyboard,
 )
 from utils import delete_previous_bot_message, safe_answer
 
@@ -61,6 +62,7 @@ FAQ_TEXTS = {
 
     # Балльно-рейтинговая система
     "faq_brs": """<tg-emoji emoji-id='5341498088408234504'>💯</tg-emoji> <b>Что такое БРС?</b>
+
 <blockquote><b>БРС</b> — балльно–рейтинговая система — способ оценивания, при котором ты не «<b>сдаёшь экзамен и всё</b>», а <b>набираешь баллы</b> за всё, что делаешь в течение семестра, а из накопленных баллов складывается итоговая оценка.</blockquote>
 <b>Если кратко:</b> у дисциплины есть <b>максимальное количество баллов</b>, которое можно набрать (<i>у всех дисциплин оно разное</i>), и есть разные типы работ в семестре: <i>ответы на семинарах</i>, <i>лабораторные</i>, <i>контрольные работы</i>, <i>посещаемость</i> — за них начисляется <b>определённая часть баллов</b>. А ещё — за сам <b>экзамен</b> или <b>зачёт</b>.
 
@@ -161,8 +163,16 @@ FAQ_TEXTS = {
 <tg-emoji emoji-id='5190495924568240622'>💝</tg-emoji> <b><a href='https://twinby.ru'>Twinby</a></b> — российское мобильное приложение для онлайн–знакомств
 """,
 
-    "faq_study_places": "Не доделал...",
-    "faq_smile": "Не доделал...",
+    # Где спокойно посидеть
+    "faq_study_places": """<tg-emoji emoji-id='5395463497783983254'>☕️</tg-emoji> <b>Где спокойной посидеть?</b>
+
+Под <b>«спокойно посидеть»</b> мы подразумеваем возможность устроиться там, где есть <i>свободная розетка</i> для зарядного устройства, и, располагая <b>зарядкой</b> и <b>доступным интернетом</b>, заниматься домашними заданиями или просто отдыхать.
+
+<tg-emoji emoji-id='5445221832074483553'>💼</tg-emoji> По своему опыту можем подсказать несколько таких мест: <b>читальный зал</b>, <b>несколько кабинетов</b> на четвёртом этаже третьего корпуса, <b>столики</b> рядом с дверьми в третьем корпусе. Это, пожалуй, самые комфортные из всех мест. Подробнее о каждом можете увидеть на фотографии выше <tg-emoji emoji-id='5202126386768140453'>👀</tg-emoji>...
+<blockquote>Конечно, чтобы с комфортом посидеть в условиях <i>белых списков</i> и при отсутствии <i>хорошего VPN</i>, стоит <b>подключиться к Wi–Fi</b>, который предоставляет ВУЗ. Для этого мы добавили соответствующий раздел «<tg-emoji emoji-id='5341715473882955310'>⚙️</tg-emoji> <b>Хочу Wi–Fi</b>».</blockquote>
+""",
+
+    "faq_wifi": "Не доделал...",
     "faq_ask_admin": "Не доделал...",
 }
 
@@ -195,6 +205,8 @@ async def process_faq_item(callback: types.CallbackQuery):
         reply_markup = get_faq_prog_slang_keyboard()
     elif callback.data == "faq_friends":
         reply_markup = get_faq_friends_keyboard()
+    elif callback.data == "faq_study_places":
+        reply_markup = get_faq_study_places_keyboard()
     else:
         reply_markup = get_faq_back_button()
 
@@ -231,6 +243,42 @@ async def process_faq_item(callback: types.CallbackQuery):
             bot_state.last_messages[callback.message.chat.id] = (
                 sent_message.message_id
             )
+    elif callback.data == "faq_study_places":
+        try:
+            # 1. Отправляем альбом из трех фото
+            album = await callback.message.answer_media_group(
+                media=[
+                    types.InputMediaPhoto(
+                        media=types.FSInputFile(config.IMG_FAQ_PLACES_1)
+                    ),
+                    types.InputMediaPhoto(
+                        media=types.FSInputFile(config.IMG_FAQ_PLACES_2)
+                    ),
+                    types.InputMediaPhoto(
+                        media=types.FSInputFile(config.IMG_FAQ_PLACES_3)
+                    ),
+                ]
+            )
+
+            text_message = await callback.message.answer(
+                text=answer_text,
+                reply_markup=reply_markup,
+                disable_web_page_preview=True,
+            )
+
+            bot_state.last_messages[callback.message.chat.id] = [
+                *(item.message_id for item in album),
+                text_message.message_id,
+            ]
+            
+        except Exception as error:
+            logging.exception("Ошибка при отправке альбома мест: %s", error)
+            sent_message = await callback.message.answer(
+                text=answer_text,
+                reply_markup=reply_markup,
+                disable_web_page_preview=True,
+            )
+            bot_state.last_messages[callback.message.chat.id] = sent_message.message_id
     else:
         sent_message = await callback.message.answer(
             text=answer_text,

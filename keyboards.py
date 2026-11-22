@@ -8,11 +8,12 @@ ICON_BACK = "5451872399953802324"
 ICON_BACK_FAQ = "5436113877181941026"
 ICON_READ = "5445267414562389170"
 
+ICON_WIFI = "5341715473882955310"
 ICON_RESOURCES = "5447410659077661506"
 ICON_TRANSLATE = "5305720405242159172"
 ICON_PROGRAMMING = "5231018528689108942"
 ICON_TRANSFER = "5323772371830588991"
-ICON_DORM = "5397782960512444700"
+ICON_DORM = "5395463497783983254"
 ICON_EXPELLED = "5447544503143504937"
 ICON_QUEEN = "5265002646397285605"
 ICON_SPORT = "5377505475015235101"
@@ -118,7 +119,7 @@ def get_faq_menu():
             types.InlineKeyboardButton(text="Где посидеть?", callback_data="faq_study_places", icon_custom_emoji_id=ICON_DORM)
         ],
         [
-            types.InlineKeyboardButton(text="Почему не улыбаются?", callback_data="faq_smile", icon_custom_emoji_id=ICON_SMILE),
+            types.InlineKeyboardButton(text="Хочу Wi–Fi", callback_data="faq_wifi", icon_custom_emoji_id=ICON_WIFI),
             types.InlineKeyboardButton(text="Стесняюсь спросить", callback_data="faq_ask_admin", icon_custom_emoji_id=ICON_FAQ)
         ],
         [
@@ -236,6 +237,23 @@ def get_faq_friends_keyboard():
                 text="Ресурсы", 
                 callback_data="student_resources", 
                 icon_custom_emoji_id=ICON_RESOURCES
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+def get_faq_study_places_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад в FAQ", 
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            ),
+            types.InlineKeyboardButton(
+                text="Хочу Wi–Fi", 
+                callback_data="faq_wifi",
+                icon_custom_emoji_id=ICON_WIFI
             )
         ]
     ]
