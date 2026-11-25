@@ -7,6 +7,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import Update
 
+from state.storage import close_db as close_bot_storage
 from system import config
 from handlers.anon import router as anon_router
 from handlers.commands import router as commands_router
@@ -154,7 +155,10 @@ async def main() -> None:
     print_banner()
 
     await bot.delete_webhook(drop_pending_updates=True)
-    await dispatcher.start_polling(bot)
+    try:
+        await dispatcher.start_polling(bot)
+    finally:
+        close_bot_storage()
 
 
 if __name__ == "__main__":

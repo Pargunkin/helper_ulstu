@@ -117,7 +117,10 @@ async def handle_admin_reply(message: types.Message) -> None:
         return
 
     if replied_msg_id in bot_state.anon_replies:
-        bot_state.anon_replies[replied_msg_id].append(message.message_id)
+        bot_state.anon_replies[replied_msg_id] = [
+            *bot_state.anon_replies[replied_msg_id],
+            message.message_id,
+        ]
 
     if message.text:
         reply_text = message.html_text
