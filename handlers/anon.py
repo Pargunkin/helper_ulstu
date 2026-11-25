@@ -1,15 +1,14 @@
 import logging
 
 from aiogram import F, Router, types
-from aiogram.dispatcher.event.bases import SkipHandler
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-import config
-import state as bot_state
-from keyboards import get_back_menu, get_end_dialog_button, get_read_button
-from utils import delete_previous_bot_message, safe_delete
+from services.keyboards import get_back_menu, get_end_dialog_button, get_read_button
+from services.utils import delete_previous_bot_message, safe_delete
+from state import storage as bot_state
+from system import config
 
 
 router = Router()
@@ -98,10 +97,6 @@ async def handle_unexpected_anon_input(
     message: types.Message,
     state: FSMContext,
 ) -> None:
-    if message.text and message.text.startswith("/"):
-        await state.clear()
-        raise SkipHandler
-
     try:
         await message.answer(
             "Пожалуйста, отправь вопрос текстовым сообщением. "

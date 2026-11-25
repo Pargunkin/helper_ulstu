@@ -5,30 +5,20 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile
 
-import config
-import state as app_state
-from keyboards import (
+from data.texts import MAIN_MENU_TEXT
+from services.cache import MEDIA_CACHE
+from services.keyboards import (
     get_abitur_menu,
     get_back_menu,
     get_main_menu,
     get_student_menu,
 )
-from utils import delete_previous_bot_message, safe_answer, safe_delete
+from services.utils import delete_previous_bot_message, safe_answer, safe_delete
+from state import storage as app_state
+from system import config
 
 
 router = Router()
-
-
-MAIN_MENU_TEXT = (
-    "<tg-emoji emoji-id='5413735113294899665'>👋</tg-emoji> "
-    "<b>Приветик!</b> Я — «<b>Студпомощник</b>» — бот четырёх студентов. "
-    "Помогу разобраться с поступлением и учёбой в УлГТУ.\n\n"
-    "<tg-emoji emoji-id='5397782960512444700'>📍</tg-emoji> "
-    "Ты в <b>главном меню</b> всего бота!\n"
-    "<tg-emoji emoji-id='5424818078833715060'>📣</tg-emoji> "
-    "Выбери, кто ты такой(–ая)...\n\n"
-    "<i>* Абитуриент — тот, кто только собирается поступать в ВУЗ!</i>"
-)
 
 
 async def send_cached_photo(
@@ -40,18 +30,18 @@ async def send_cached_photo(
     await delete_previous_bot_message(message.bot, message.chat.id)
 
     try:
-        if filename not in config.MEDIA_CACHE:
+        if filename not in MEDIA_CACHE:
             photo = FSInputFile(filename)
             sent_message = await message.answer_photo(
                 photo=photo,
                 caption=caption,
                 reply_markup=keyboard,
             )
-            config.MEDIA_CACHE[filename] = sent_message.photo[-1].file_id
+            MEDIA_CACHE[filename] = sent_message.photo[-1].file_id
             logging.info("[CACHE] Файл '%s' загружен.", filename)
         else:
             sent_message = await message.answer_photo(
-                photo=config.MEDIA_CACHE[filename],
+                photo=MEDIA_CACHE[filename],
                 caption=caption,
                 reply_markup=keyboard,
             )
@@ -108,6 +98,8 @@ async def process_student(callback: types.CallbackQuery) -> None:
 @router.callback_query(F.data == "menu_main", F.message.chat.type == "private")
 async def process_back(callback: types.CallbackQuery, state: FSMContext) -> None:
     await state.clear()
+    # Удаляем сообщение с кнопкой, чтобы оно не зависло
+    await safe_delete(callback.message)
     await send_main_menu(callback.message, MAIN_MENU_TEXT)
     await safe_answer(callback)
 

@@ -7,12 +7,12 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import Update
 
-import config
-from anon import router as anon_router
-from commands import router as commands_router
-from console import Colors, play_intro, print_banner
-from faq import router as faq_router
-from logic import router as logic_router
+from system import config
+from handlers.anon import router as anon_router
+from handlers.commands import router as commands_router
+from system.console import Colors, play_intro, print_banner
+from handlers.faq import router as faq_router
+from handlers.logic import router as logic_router
 
 
 class ColorFormatter(logging.Formatter):
@@ -107,6 +107,28 @@ class IgnoreGroupSpamMiddleware(BaseMiddleware):
         return await handler(event, data)
 
 
+class ExitAnonOnCommandMiddleware(BaseMiddleware):
+    """Любая команда, кроме /anon, сбрасывает FSM (и выходит из анонимного режима).
+
+    raw_state тоже обнуляется: фильтры состояний читают именно его,
+    а не state.get_state(), поэтому одного state.clear() недостаточно.
+    """
+
+    async def __call__(self, handler, event, data):
+        text = getattr(event, "text", None)
+        state = data.get("state")
+        if (
+            state is not None
+            and text
+            and text.startswith("/")
+            and not text.startswith("/anon")
+        ):
+            await state.clear()
+            data["raw_state"] = None
+
+        return await handler(event, data)
+
+
 async def main() -> None:
     settings = config.validate_config()
 
@@ -121,8 +143,10 @@ async def main() -> None:
         IgnoreGroupSpamMiddleware(settings.admin_group_id)
     )
 
-    dispatcher.include_router(anon_router)
+    dispatcher.message.outer_middleware(ExitAnonOnCommandMiddleware())
+
     dispatcher.include_router(commands_router)
+    dispatcher.include_router(anon_router)
     dispatcher.include_router(faq_router)
     dispatcher.include_router(logic_router)
 

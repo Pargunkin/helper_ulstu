@@ -2,7 +2,7 @@ import logging
 
 from aiogram import Bot, types
 
-import state
+from state import storage as bot_state
 
 
 async def safe_delete(message: types.Message) -> None:
@@ -12,8 +12,8 @@ async def safe_delete(message: types.Message) -> None:
             and message.from_user
             and message.from_user.id == message.chat.id
         ):
-            if message.chat.id not in state.saved_first_messages:
-                state.saved_first_messages[message.chat.id] = True
+            if message.chat.id not in bot_state.saved_first_messages:
+                bot_state.saved_first_messages[message.chat.id] = True
                 return
 
         await message.delete()
@@ -34,7 +34,7 @@ async def safe_answer(callback: types.CallbackQuery) -> None:
 
 
 async def delete_previous_bot_message(bot: Bot, chat_id: int) -> None:
-    message_ids = state.last_messages.get(chat_id)
+    message_ids = bot_state.last_messages.get(chat_id)
 
     if not message_ids:
         return
@@ -55,4 +55,4 @@ async def delete_previous_bot_message(bot: Bot, chat_id: int) -> None:
                 exc_info=True,
             )
 
-    state.last_messages.pop(chat_id, None)
+    bot_state.last_messages.pop(chat_id, None)

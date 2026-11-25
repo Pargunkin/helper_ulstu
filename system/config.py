@@ -15,7 +15,8 @@ class Settings:
 
 def load_dotenv(path: str | os.PathLike[str] | None = None) -> None:
     if path is None:
-        path = Path(__file__).resolve().parent / ".env"
+        # .env лежит в корне проекта (родительская папка от system/)
+        path = Path(__file__).resolve().parent.parent / ".env"
     else:
         path = Path(path)
 
@@ -62,8 +63,6 @@ try:
 except ValueError:
     ADMIN_GROUP_ID = None
     _ADMIN_GROUP_ID_ERROR = "ADMIN_GROUP_ID должен быть целым числом."
-
-MEDIA_CACHE: dict[str, str] = {}
 
 IMG_BANNER = "images/banner.jpg"
 IMG_ABOUT = "images/about.jpg"

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3f63809f-3962-4b0f-96ae-9f9ddd00e4fd</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>main.py</StartupFile>
+    <StartupFile>system\main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,16 +21,30 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="anon.py" />
-    <Compile Include="commands.py" />
-    <Compile Include="config.py" />
-    <Compile Include="console.py" />
-    <Compile Include="faq.py" />
-    <Compile Include="keyboards.py" />
-    <Compile Include="logic.py" />
-    <Compile Include="main.py" />
-    <Compile Include="state.py" />
-    <Compile Include="utils.py" />
+    <Compile Include="data\emoji.py" />
+    <Compile Include="data\texts.py" />
+    <Compile Include="data\__init__.py" />
+    <Compile Include="handlers\anon.py" />
+    <Compile Include="handlers\__init__.py" />
+    <Compile Include="services\__init__.py" />
+    <Compile Include="state\__init__.py" />
+    <Compile Include="system\__init__.py" />
+    <Compile Include="handlers\commands.py" />
+    <Compile Include="system\config.py" />
+    <Compile Include="system\console.py" />
+    <Compile Include="handlers\faq.py" />
+    <Compile Include="services\keyboards.py" />
+    <Compile Include="handlers\logic.py" />
+    <Compile Include="system\main.py" />
+    <Compile Include="state\storage.py" />
+    <Compile Include="services\utils.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="handlers\" />
+    <Folder Include="data\" />
+    <Folder Include="state\" />
+    <Folder Include="services\" />
+    <Folder Include="system\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
