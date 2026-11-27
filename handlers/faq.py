@@ -1,6 +1,8 @@
 from aiogram import F, Router, types
+from aiogram.exceptions import TelegramBadRequest
 
 from data.texts import FAQ_TEXTS
+from data.wifi_guides import WIFI_GUIDES, guide_menu_text, step_text
 from services.keyboards import (
     get_faq_academic_keyboard,
     get_faq_back_button,
@@ -12,6 +14,8 @@ from services.keyboards import (
     get_faq_study_places_keyboard,
     get_faq_survive_keyboard,
     get_faq_wifi_keyboard,
+    get_wifi_os_keyboard,
+    get_wifi_step_keyboard,
 )
 from services.media import send_cached_album
 from services.utils import delete_previous_bot_message, safe_answer
@@ -97,4 +101,77 @@ async def process_faq_item(callback: types.CallbackQuery):
             sent_message.message_id
         )
 
+    await safe_answer(callback)
+
+
+# ── Пошаговая инструкция по Wi-Fi ──
+
+
+async def _show_guide_view(callback: types.CallbackQuery, text: str, keyboard) -> None:
+    """Обновляет сообщение на месте, а если это подпись к фото — отправляет новое."""
+    try:
+        await callback.message.edit_text(
+            text=text,
+            reply_markup=keyboard,
+            disable_web_page_preview=True,
+        )
+        return
+    except TelegramBadRequest:
+        pass
+
+    await delete_previous_bot_message(callback.bot, callback.message.chat.id)
+    sent_message = await callback.message.answer(
+        text=text,
+        reply_markup=keyboard,
+        disable_web_page_preview=True,
+    )
+    bot_state.last_messages[callback.message.chat.id] = sent_message.message_id
+
+
+@router.callback_query(F.data == "wifi_guide", F.message.chat.type == "private")
+async def process_wifi_guide_menu(callback: types.CallbackQuery):
+    await delete_previous_bot_message(callback.bot, callback.message.chat.id)
+
+    sent_message = await callback.message.answer(
+        text=guide_menu_text(),
+        reply_markup=get_wifi_os_keyboard(),
+        disable_web_page_preview=True,
+    )
+    bot_state.last_messages[callback.message.chat.id] = sent_message.message_id
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data.startswith("wifi_os_"), F.message.chat.type == "private")
+async def process_wifi_os_choice(callback: types.CallbackQuery):
+    os_key = callback.data.removeprefix("wifi_os_")
+    if os_key not in WIFI_GUIDES:
+        await safe_answer(callback)
+        return
+
+    steps = WIFI_GUIDES[os_key]
+    await delete_previous_bot_message(callback.bot, callback.message.chat.id)
+
+    sent_message = await callback.message.answer(
+        text=step_text(os_key, 1),
+        reply_markup=get_wifi_step_keyboard(os_key, 0, len(steps)),
+        disable_web_page_preview=True,
+    )
+    bot_state.last_messages[callback.message.chat.id] = sent_message.message_id
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data.startswith("wifi_step_"), F.message.chat.type == "private")
+async def process_wifi_step(callback: types.CallbackQuery):
+    _, _, os_key, raw_number = callback.data.split("_")
+    if os_key not in WIFI_GUIDES or not raw_number.isdigit():
+        await safe_answer(callback)
+        return
+
+    steps = WIFI_GUIDES[os_key]
+    number = max(1, min(len(steps), int(raw_number)))
+    await _show_guide_view(
+        callback,
+        step_text(os_key, number),
+        get_wifi_step_keyboard(os_key, number - 1, len(steps)),
+    )
     await safe_answer(callback)

@@ -10,7 +10,11 @@ from data.emoji import (
     ICON_DORM,
     ICON_EXPELLED,
     ICON_FAQ,
+    ICON_GUIDE,
     ICON_HELP,
+    ICON_NEXT,
+    ICON_OS_BACK,
+    ICON_PREV,
     ICON_PROGRAMMING,
     ICON_QUEEN,
     ICON_READ,
@@ -22,6 +26,7 @@ from data.emoji import (
     ICON_TRANSLATE,
     ICON_WIFI,
 )
+from data.wifi_guides import OS_ORDER, WIFI_OS
 
 def get_main_menu():
     kb = [
@@ -247,6 +252,13 @@ def get_faq_wifi_keyboard():
     kb = [
         [
             types.InlineKeyboardButton(
+                text="Пошаговая инструкция",
+                callback_data="wifi_guide",
+                icon_custom_emoji_id=ICON_GUIDE
+            )
+        ],
+        [
+            types.InlineKeyboardButton(
                 text="Назад в FAQ",
                 callback_data="menu_faq",
                 icon_custom_emoji_id=ICON_BACK_FAQ
@@ -259,6 +271,82 @@ def get_faq_wifi_keyboard():
         ]
     ]
     return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+def get_wifi_os_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text=WIFI_OS[key]["title"],
+                callback_data=f"wifi_os_{key}",
+                icon_custom_emoji_id=WIFI_OS[key]["emoji_id"]
+            )
+            for key in OS_ORDER
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="Назад в Wi–Fi",
+                callback_data="faq_wifi",
+                icon_custom_emoji_id=ICON_WIFI
+            ),
+            types.InlineKeyboardButton(
+                text="Назад в FAQ",
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+def get_wifi_step_keyboard(os_key: str, index: int, total: int):
+    """index — с нуля. На первом шаге нет «Назад», на последнем — «Далее»."""
+    kb = []
+
+    if index == 0:
+        kb.append([
+            types.InlineKeyboardButton(
+                text="Далее",
+                callback_data=f"wifi_step_{os_key}_{index + 2}",
+                icon_custom_emoji_id=ICON_NEXT
+            )
+        ])
+    elif index >= total - 1:
+        kb.append([
+            types.InlineKeyboardButton(
+                text="Назад",
+                callback_data=f"wifi_step_{os_key}_{index}",
+                icon_custom_emoji_id=ICON_PREV
+            )
+        ])
+    else:
+        kb.append([
+            types.InlineKeyboardButton(
+                text="Назад",
+                callback_data=f"wifi_step_{os_key}_{index}",
+                icon_custom_emoji_id=ICON_PREV
+            ),
+            types.InlineKeyboardButton(
+                text="Далее",
+                callback_data=f"wifi_step_{os_key}_{index + 2}",
+                icon_custom_emoji_id=ICON_NEXT
+            )
+        ])
+
+    kb.append([
+        types.InlineKeyboardButton(
+            text="Назад к ОС",
+            callback_data="wifi_guide",
+            icon_custom_emoji_id=ICON_OS_BACK
+        ),
+        types.InlineKeyboardButton(
+            text="Назад в FAQ",
+            callback_data="menu_faq",
+            icon_custom_emoji_id=ICON_BACK_FAQ
+        )
+    ])
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
 
 def get_faq_academic_keyboard():
     kb = [
