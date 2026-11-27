@@ -243,6 +243,40 @@ def get_faq_friends_keyboard():
     ]
     return types.InlineKeyboardMarkup(inline_keyboard=kb)
 
+def get_faq_wifi_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад в FAQ",
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            ),
+            types.InlineKeyboardButton(
+                text="Где посидеть?",
+                callback_data="faq_study_places",
+                icon_custom_emoji_id=ICON_DORM
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+def get_faq_academic_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад в FAQ",
+                callback_data="menu_faq",
+                icon_custom_emoji_id=ICON_BACK_FAQ
+            ),
+            types.InlineKeyboardButton(
+                text="Как не отчислиться?",
+                callback_data="faq_expelled",
+                icon_custom_emoji_id=ICON_EXPELLED
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
 def get_faq_study_places_keyboard():
     kb = [
         [

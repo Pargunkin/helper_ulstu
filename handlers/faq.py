@@ -1,9 +1,8 @@
-import logging
-
 from aiogram import F, Router, types
 
 from data.texts import FAQ_TEXTS
 from services.keyboards import (
+    get_faq_academic_keyboard,
     get_faq_back_button,
     get_faq_expelled_keyboard,
     get_faq_friends_keyboard,
@@ -12,7 +11,9 @@ from services.keyboards import (
     get_faq_slang_keyboard,
     get_faq_study_places_keyboard,
     get_faq_survive_keyboard,
+    get_faq_wifi_keyboard,
 )
+from services.media import send_cached_album
 from services.utils import delete_previous_bot_message, safe_answer
 from state import storage as bot_state
 from system import config
@@ -50,77 +51,42 @@ async def process_faq_item(callback: types.CallbackQuery):
         reply_markup = get_faq_friends_keyboard()
     elif callback.data == "faq_study_places":
         reply_markup = get_faq_study_places_keyboard()
+    elif callback.data == "faq_wifi":
+        reply_markup = get_faq_wifi_keyboard()
+    elif callback.data == "faq_academic":
+        reply_markup = get_faq_academic_keyboard()
     else:
         reply_markup = get_faq_back_button()
 
     if callback.data == "faq_brs":
-        try:
-            album = await callback.message.answer_media_group(
-                media=[
-                    types.InputMediaPhoto(
-                        media=types.FSInputFile(config.IMG_FAQ_EXAMPLE)
-                    ),
-                    types.InputMediaPhoto(
-                        media=types.FSInputFile(config.IMG_FAQ_LIST)
-                    ),
-                ]
-            )
-
-            text_message = await callback.message.answer(
-                text=answer_text,
-                reply_markup=reply_markup,
-                disable_web_page_preview=True,
-            )
-
-            bot_state.last_messages[callback.message.chat.id] = [
-                *(item.message_id for item in album),
-                text_message.message_id,
-            ]
-        except Exception as error:
-            logging.exception("Ошибка при отправке фото БРС: %s", error)
-            sent_message = await callback.message.answer(
-                text=answer_text,
-                reply_markup=reply_markup,
-                disable_web_page_preview=True,
-            )
-            bot_state.last_messages[callback.message.chat.id] = (
-                sent_message.message_id
-            )
+        await send_cached_album(
+            callback.message,
+            filenames=[config.IMG_FAQ_EXAMPLE, config.IMG_FAQ_LIST],
+            caption=answer_text,
+            keyboard=reply_markup,
+        )
+    elif callback.data == "faq_wifi":
+        await send_cached_album(
+            callback.message,
+            filenames=[
+                config.IMG_FAQ_WIFI_1,
+                config.IMG_FAQ_WIFI_2,
+                config.IMG_FAQ_WIFI_3,
+            ],
+            caption=answer_text,
+            keyboard=reply_markup,
+        )
     elif callback.data == "faq_study_places":
-        try:
-            album = await callback.message.answer_media_group(
-                media=[
-                    types.InputMediaPhoto(
-                        media=types.FSInputFile(config.IMG_FAQ_PLACES_1)
-                    ),
-                    types.InputMediaPhoto(
-                        media=types.FSInputFile(config.IMG_FAQ_PLACES_2)
-                    ),
-                    types.InputMediaPhoto(
-                        media=types.FSInputFile(config.IMG_FAQ_PLACES_3)
-                    ),
-                ]
-            )
-
-            text_message = await callback.message.answer(
-                text=answer_text,
-                reply_markup=reply_markup,
-                disable_web_page_preview=True,
-            )
-
-            bot_state.last_messages[callback.message.chat.id] = [
-                *(item.message_id for item in album),
-                text_message.message_id,
-            ]
-
-        except Exception as error:
-            logging.exception("Ошибка при отправке альбома мест: %s", error)
-            sent_message = await callback.message.answer(
-                text=answer_text,
-                reply_markup=reply_markup,
-                disable_web_page_preview=True,
-            )
-            bot_state.last_messages[callback.message.chat.id] = sent_message.message_id
+        await send_cached_album(
+            callback.message,
+            filenames=[
+                config.IMG_FAQ_PLACES_1,
+                config.IMG_FAQ_PLACES_2,
+                config.IMG_FAQ_PLACES_3,
+            ],
+            caption=answer_text,
+            keyboard=reply_markup,
+        )
     else:
         sent_message = await callback.message.answer(
             text=answer_text,

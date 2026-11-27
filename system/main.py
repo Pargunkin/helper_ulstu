@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 
 from aiogram import BaseMiddleware, Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -11,70 +12,16 @@ from state.storage import close_db as close_bot_storage
 from system import config
 from handlers.anon import router as anon_router
 from handlers.commands import router as commands_router
-from system.console import Colors, play_intro, print_banner
+from system.console import (
+    ColorFormatter,
+    StatsFilter,
+    StatusBar,
+    play_banner,
+    play_intro,
+    print_goodbye,
+)
 from handlers.faq import router as faq_router
 from handlers.logic import router as logic_router
-
-
-class ColorFormatter(logging.Formatter):
-    FORMATS = {
-        logging.DEBUG: (
-            Colors.CYAN
-            + "[%(asctime)s]"
-            + Colors.RESET
-            + " "
-            + Colors.CYAN
-            + "%(levelname)s"
-            + Colors.RESET
-            + ": %(message)s"
-        ),
-        logging.INFO: (
-            Colors.CYAN
-            + "[%(asctime)s]"
-            + Colors.RESET
-            + " "
-            + Colors.GREEN
-            + "%(levelname)s"
-            + Colors.RESET
-            + ": %(message)s"
-        ),
-        logging.WARNING: (
-            Colors.CYAN
-            + "[%(asctime)s]"
-            + Colors.RESET
-            + " "
-            + Colors.YELLOW
-            + "%(levelname)s"
-            + Colors.RESET
-            + ": %(message)s"
-        ),
-        logging.ERROR: (
-            Colors.CYAN
-            + "[%(asctime)s]"
-            + Colors.RESET
-            + " "
-            + Colors.RED
-            + "%(levelname)s"
-            + Colors.RESET
-            + ": %(message)s"
-        ),
-        logging.CRITICAL: (
-            Colors.CYAN
-            + "[%(asctime)s]"
-            + Colors.RESET
-            + " "
-            + Colors.RED
-            + Colors.BOLD
-            + "%(levelname)s"
-            + Colors.RESET
-            + ": %(message)s"
-        ),
-    }
-
-    def format(self, record: logging.LogRecord) -> str:
-        log_format = self.FORMATS.get(record.levelno, self.FORMATS[logging.INFO])
-        formatter = logging.Formatter(log_format, datefmt="%H:%M:%S")
-        return formatter.format(record)
 
 
 def configure_logging() -> None:
@@ -86,6 +33,7 @@ def configure_logging() -> None:
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(ColorFormatter())
+    console_handler.addFilter(StatsFilter())
     logger.addHandler(console_handler)
 
     logging.getLogger("aiogram.event").setLevel(logging.INFO)
@@ -151,14 +99,30 @@ async def main() -> None:
     dispatcher.include_router(faq_router)
     dispatcher.include_router(logic_router)
 
-    await play_intro()
-    print_banner()
-
-    await bot.delete_webhook(drop_pending_updates=True)
+    status_bar = StatusBar()
     try:
+        bot_info = await bot.get_me()
+
+        started = time.perf_counter()
+        await bot.get_me()
+        ping_ms = round((time.perf_counter() - started) * 1000)
+
+        await play_intro()
+        printed_lines = await play_banner(
+            bot_info,
+            extras=[
+                ("Пинг API", f"{ping_ms} ms"),
+                ("Роутеры", str(len(dispatcher.sub_routers))),
+            ],
+        )
+        status_bar.start(printed_lines)
+
+        await bot.delete_webhook(drop_pending_updates=True)
         await dispatcher.start_polling(bot)
     finally:
+        await status_bar.stop()
         close_bot_storage()
+        await bot.session.close()
 
 
 if __name__ == "__main__":
@@ -167,7 +131,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print(f"\n{Colors.RED}🛑 Бот остановлен. До встречи!{Colors.RESET}")
+        print_goodbye()
     except config.ConfigurationError as error:
         logging.error("%s", error)
     except Exception:
