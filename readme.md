@@ -63,15 +63,15 @@
 
 ```
 Главное меню
-├── 🏆 Лидеры                        menu_leaders       ❌🔗 /leaderboard
+├── 🏆 Лидеры                        menu_leaders          ❌🔗 /leaderboard
 ├── 🎒 Я — первокурсник              menu_student
 │   ├── 🗺️ Навигация                 student_nav
-│   │   ├── Карта корпусов           student_map        ❌
-│   │   └── Навигация по сайту       student_site       ❌
-│   ├── 🔔 Звонки                    student_bell       ❌🔗 /bell
-│   ├── 💰 Стипендии и матпомощь     student_scholarship ❌
-│   ├── 🏃 Физкультура               student_sport      ❌
-│   ├── 📚 Ресурсы                   student_resources  ✅🔗 Как найти друзей?
+│   │   ├── Карта корпусов           student_map           ❌
+│   │   └── Навигация по сайту       student_site          ❌
+│   ├── 🔔 Звонки                    student_bell          ❌🔗 /bell
+│   ├── 💰 Стипендии и матпомощь     student_scholarship   ❌
+│   ├── 🏃 Физкультура               student_sport         ❌
+│   ├── 📚 Ресурсы                   student_resources     ✅🔗 Как найти друзей?
 │   │   ├── 💻 Программное обеспечение  student_software   ❌
 │   │   ├── 📇 Контакты                 student_contacts   ❌🔗 Команда ФИСТа
 │   │   └── 🏢 Центр обслуживания       student_center     ❌🔗 Академ. отпуск
