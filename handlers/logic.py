@@ -5,13 +5,23 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile
 
-from data.menu import MAIN_MENU_TEXT
+from data.menu import (
+    DOCS_MENU_TEXT,
+    MAIN_MENU_TEXT,
+    NAV_MENU_TEXT,
+    RESOURCES_MENU_TEXT,
+    STUDENT_MENU_TEXT,
+)
 from data.stubs import STUB_TEXTS
 from services.cache import MEDIA_CACHE
 from services.keyboards import (
     get_back_menu,
     get_main_menu,
+    get_student_back_keyboard,
+    get_student_docs_keyboard,
     get_student_menu,
+    get_student_nav_keyboard,
+    get_student_resources_keyboard,
 )
 from services.utils import delete_previous_bot_message, safe_answer, safe_delete
 from state import storage as app_state
@@ -79,8 +89,38 @@ async def cmd_start(message: types.Message, state: FSMContext) -> None:
 async def process_student(callback: types.CallbackQuery) -> None:
     await send_text_menu(
         callback.message,
-        "🎒 Раздел для первокурсников. Что вас интересует?",
+        STUDENT_MENU_TEXT,
         get_student_menu(),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data == "student_nav", F.message.chat.type == "private")
+async def process_student_nav(callback: types.CallbackQuery) -> None:
+    await send_text_menu(
+        callback.message,
+        NAV_MENU_TEXT,
+        get_student_nav_keyboard(),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data == "student_docs", F.message.chat.type == "private")
+async def process_student_docs(callback: types.CallbackQuery) -> None:
+    await send_text_menu(
+        callback.message,
+        DOCS_MENU_TEXT,
+        get_student_docs_keyboard(),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data == "student_resources", F.message.chat.type == "private")
+async def process_student_resources(callback: types.CallbackQuery) -> None:
+    await send_text_menu(
+        callback.message,
+        RESOURCES_MENU_TEXT,
+        get_student_resources_keyboard(),
     )
     await safe_answer(callback)
 
@@ -99,10 +139,15 @@ async def process_back(callback: types.CallbackQuery, state: FSMContext) -> None
     F.message.chat.type == "private",
 )
 async def process_stubs(callback: types.CallbackQuery) -> None:
+    keyboard = (
+        get_student_back_keyboard()
+        if callback.data.startswith(("student_", "docs_"))
+        else get_back_menu()
+    )
     await send_text_menu(
         callback.message,
         STUB_TEXTS.get(callback.data, "Этот раздел в разработке."),
-        get_back_menu(),
+        keyboard,
     )
     await safe_answer(callback)
 

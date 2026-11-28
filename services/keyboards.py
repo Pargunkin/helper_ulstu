@@ -59,12 +59,70 @@ def get_main_menu():
 
 def get_student_menu():
     kb = [
-        [types.InlineKeyboardButton(text="🗺️ Навигация", callback_data="student_nav")],
-        [types.InlineKeyboardButton(text="📑 Справки", callback_data="student_docs")],
+        [
+            types.InlineKeyboardButton(text="🗺️ Навигация", callback_data="student_nav"),
+            types.InlineKeyboardButton(text="🔔 Звонки", callback_data="student_bell")
+        ],
+        [
+            types.InlineKeyboardButton(text="💰 Стипендии", callback_data="student_scholarship"),
+            types.InlineKeyboardButton(text="🏃 Физкультура", callback_data="student_sport")
+        ],
+        [
+            types.InlineKeyboardButton(text="📚 Ресурсы", callback_data="student_resources"),
+            types.InlineKeyboardButton(text="📑 Справки", callback_data="student_docs")
+        ],
         [
             types.InlineKeyboardButton(
-                text="Назад в меню", 
+                text="Назад в меню",
                 callback_data="menu_main",
+                icon_custom_emoji_id=ICON_BACK
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+def get_student_nav_keyboard():
+    kb = [
+        [types.InlineKeyboardButton(text="🗺️ Карта корпусов", callback_data="student_map")],
+        [types.InlineKeyboardButton(text="🌐 Навигация по сайту", callback_data="student_site")],
+        [
+            types.InlineKeyboardButton(
+                text="Назад",
+                callback_data="menu_student",
+                icon_custom_emoji_id=ICON_BACK
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+def get_student_docs_keyboard():
+    kb = [
+        [types.InlineKeyboardButton(text="🪖 Воинский учёт", callback_data="docs_military")],
+        [types.InlineKeyboardButton(text="🏅 Справка для физкультуры", callback_data="docs_sport")],
+        [types.InlineKeyboardButton(text="🎫 Потеря пропуска", callback_data="docs_pass")],
+        [types.InlineKeyboardButton(text="📇 Потеря студенческого", callback_data="docs_student_id")],
+        [
+            types.InlineKeyboardButton(
+                text="Назад",
+                callback_data="menu_student",
+                icon_custom_emoji_id=ICON_BACK
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+def get_student_resources_keyboard():
+    kb = [
+        [types.InlineKeyboardButton(text="💻 Программное обеспечение", callback_data="student_software")],
+        [types.InlineKeyboardButton(text="📇 Контакты", callback_data="student_contacts")],
+        [types.InlineKeyboardButton(text="🏢 Центр обслуживания студентов", callback_data="student_center")],
+        [
+            types.InlineKeyboardButton(
+                text="Назад",
+                callback_data="menu_student",
                 icon_custom_emoji_id=ICON_BACK
             )
         ]
@@ -82,6 +140,19 @@ def get_back_menu():
         ]
     ]
     return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+def get_student_back_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(
+                text="Назад",
+                callback_data="menu_student",
+                icon_custom_emoji_id=ICON_BACK
+            )
+        ]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
 
 def get_read_button():
     kb = [
@@ -103,7 +174,7 @@ def get_faq_menu():
         ],
         [
             types.InlineKeyboardButton(text="Что такое БРС?", callback_data="faq_brs", icon_custom_emoji_id=ICON_BOOK),
-            types.InlineKeyboardButton(text="Смена направления", callback_data="faq_transfer", icon_custom_emoji_id=ICON_TRANSFER)
+            types.InlineKeyboardButton(text="Перевод на бюджет", callback_data="faq_transfer", icon_custom_emoji_id=ICON_TRANSFER)
         ],
         [
             types.InlineKeyboardButton(text="Сленг для учёбы", callback_data="faq_slang", icon_custom_emoji_id=ICON_TRANSLATE),

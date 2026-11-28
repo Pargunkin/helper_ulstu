@@ -63,27 +63,39 @@
 
 ```
 Главное меню
-├── 🏆 Лидеры                    menu_leaders       💤
-├── 🎒 Я — первокурсник          menu_student
-│   ├── 🗺️ Навигация             student_nav        💤
-│   ├── 📑 Справки               student_docs       💤
-│   └── 📚 Ресурсы               student_resources  📝
-└── ❓ FAQ                       menu_faq
-    ├── Как не отчислиться?          faq_expelled      ✅
-    ├── Я тут выживу?                faq_survive       ✅
+├── 🏆 Лидеры                        menu_leaders       ❌🔗 /leaderboard
+├── 🎒 Я — первокурсник              menu_student
+│   ├── 🗺️ Навигация                 student_nav
+│   │   ├── Карта корпусов           student_map        ❌
+│   │   └── Навигация по сайту       student_site       ❌
+│   ├── 🔔 Звонки                    student_bell       ❌🔗 /bell
+│   ├── 💰 Стипендии и матпомощь     student_scholarship ❌
+│   ├── 🏃 Физкультура               student_sport      ❌
+│   ├── 📚 Ресурсы                   student_resources  ✅🔗 Как найти друзей?
+│   │   ├── 💻 Программное обеспечение  student_software   ❌
+│   │   ├── 📇 Контакты                 student_contacts   ❌🔗 Команда ФИСТа
+│   │   └── 🏢 Центр обслуживания       student_center     ❌🔗 Академ. отпуск
+│   └── 📑 Справки и документы       student_docs
+│       ├── 🪖 Воинский учёт            docs_military      ❌
+│       ├── 🏅 Справка для физкультуры  docs_sport         ❌
+│       ├── 🎫 Потеря пропуска          docs_pass          ❌
+│       └── 📇 Потеря студенческого     docs_student_id    ❌
+└── ❓ FAQ                           menu_faq
+    ├── Как не отчислиться?          faq_expelled      ✅🔗 Академ. отпуск
+    ├── Я тут выживу?                faq_survive       ✅🔗 Как не отчислиться?
     ├── Что такое БРС?               faq_brs           ✅
-    ├── Смена направления            faq_transfer      💤
+    ├── Перевод на бюджет            faq_transfer      ❌
     ├── Сленг для учёбы              faq_slang         ✅
     │   └── Сленг программистов      faq_prog_slang    ✅
-    ├── Академ. отпуск               faq_academic      ✅
-    ├── Как найти друзей?            faq_friends       ✅
-    ├── Где посидеть?                faq_study_places  ✅
-    ├── Хочу Wi–Fi                   faq_wifi          ✅
+    ├── Академ. отпуск               faq_academic      ✅🔗 Как не отчислиться? + ЦОС
+    ├── Как найти друзей?            faq_friends       ✅🔗 Ресурсы
+    ├── Где посидеть?                faq_study_places  ✅🔗 Wi–Fi
+    ├── Хочу Wi–Fi                   faq_wifi          ✅🔗 Где посидеть?
     │   └── Пошаговая инструкция     wifi_guide        ✅
     │       ├── Android              wifi_os_android   ✅
     │       ├── Windows              wifi_os_windows   ✅
     │       └── macOS                wifi_os_macos     ✅
-    └── Стесняюсь спросить           faq_ask_admin     ✅
+    └── Стесняюсь спросить           faq_ask_admin     ✅🔗 /anon
 ```
 
 <a name="quickstart"></a>
