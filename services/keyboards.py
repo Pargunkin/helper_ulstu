@@ -99,11 +99,16 @@ def get_student_nav_keyboard():
 
 def get_map_keyboard():
     kb = [
+        [types.InlineKeyboardButton(text="🚪 Аудитории 1–5", callback_data="map_auditoriums")],
         [
             types.InlineKeyboardButton(text="🏢 Корпус 3", callback_data="map_building_3"),
+            types.InlineKeyboardButton(text="🏢 Корпус 5", callback_data="map_building_5"),
             types.InlineKeyboardButton(text="🏢 Корпус 6", callback_data="map_building_6")
         ],
-        [types.InlineKeyboardButton(text="🏋️ Спортзал", callback_data="map_place_sport")],
+        [
+            types.InlineKeyboardButton(text="🏋️ «Новый» спортзал", callback_data="map_place_sport_new"),
+            types.InlineKeyboardButton(text="🏋️ «Старый» спортзал", callback_data="map_place_sport_old")
+        ],
         [types.InlineKeyboardButton(text="🛸 Фойе РЦНТК «Тарелка»", callback_data="map_place_tarelka")],
         [
             types.InlineKeyboardButton(
@@ -116,7 +121,12 @@ def get_map_keyboard():
     return types.InlineKeyboardMarkup(inline_keyboard=kb)
 
 
-def get_building_keyboard(building: str, floors: int):
+def get_building_keyboard(
+    building: str,
+    floors: int,
+    per_row: int = 2,
+    with_auditoriums: bool = False,
+):
     buttons = [
         types.InlineKeyboardButton(
             text=f"{floor} этаж",
@@ -125,7 +135,12 @@ def get_building_keyboard(building: str, floors: int):
         for floor in range(1, floors + 1)
     ]
 
-    kb = [buttons[index:index + 3] for index in range(0, len(buttons), 3)]
+    kb = [buttons[index:index + per_row] for index in range(0, len(buttons), per_row)]
+    if with_auditoriums:
+        kb.insert(
+            0,
+            [types.InlineKeyboardButton(text="🚪 Аудитории 1–5", callback_data="map_auditoriums")],
+        )
     kb.append([
         types.InlineKeyboardButton(
             text="Назад к карте",
@@ -146,6 +161,23 @@ def get_floor_keyboard(building: str):
             )
         ],
         [types.InlineKeyboardButton(text="На карту", callback_data="student_map")]
+    ]
+    return types.InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+def get_auditoriums_keyboard():
+    kb = [
+        [
+            types.InlineKeyboardButton(text="🏢 Корпус 3", callback_data="map_building_3"),
+            types.InlineKeyboardButton(text="🏢 Корпус 6", callback_data="map_building_6")
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="На карту",
+                callback_data="student_map",
+                icon_custom_emoji_id=ICON_BACK
+            )
+        ]
     ]
     return types.InlineKeyboardMarkup(inline_keyboard=kb)
 

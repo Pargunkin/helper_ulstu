@@ -3,16 +3,19 @@
 from pathlib import Path
 
 CAMPUS_IMAGE = "images/navigation/campus.jpg"
+AUDITORIUMS_IMAGE = "images/navigation/auditoriums.jpg"
 
-# Корпуса и количество этажей
-BUILDINGS: dict[str, tuple[str, int]] = {
-    "3": ("Корпус 3", 4),
-    "6": ("Корпус 6", 9),
+# Корпус: (название, количество этажей, этажей в ряду)
+BUILDINGS: dict[str, tuple[str, int, int]] = {
+    "3": ("Корпус 3", 4, 2),
+    "5": ("Корпус 5", 4, 2),
+    "6": ("Корпус 6", 9, 3),
 }
 
 # Отдельные площадки
 PLACES: dict[str, tuple[str, str]] = {
-    "sport": ("Спортзал", "🏋️"),
+    "sport_new": ("«Новый» спортзал", "🏋️"),
+    "sport_old": ("«Старый» спортзал", "🏋️"),
     "tarelka": ("Фойе РЦНТК «Тарелка»", "🛸"),
 }
 
@@ -32,6 +35,12 @@ FLOOR_TEXT = (
 PLACE_TEXT = (
     "{icon} <b>{title}</b>\n\n"
     "<i>Здесь будет описание и схема, как найти это место...</i>"
+)
+
+AUDITORIUMS_TEXT = (
+    "🚪 <b>Аудитории 1–5</b>\n\n"
+    "<i>Здесь будет описание, как пройти в аудитории 1–5. "
+    "Из них можно попасть сразу в корпус 3 и в корпус 6.</i>"
 )
 
 

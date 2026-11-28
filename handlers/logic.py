@@ -13,6 +13,8 @@ from data.menu import (
     STUDENT_MENU_TEXT,
 )
 from data.navigation import (
+    AUDITORIUMS_IMAGE,
+    AUDITORIUMS_TEXT,
     BUILDING_MENU_TEXT,
     BUILDINGS,
     CAMPUS_IMAGE,
@@ -27,6 +29,7 @@ from data.navigation import (
 from data.stubs import STUB_TEXTS
 from services.cache import MEDIA_CACHE
 from services.keyboards import (
+    get_auditoriums_keyboard,
     get_back_menu,
     get_building_keyboard,
     get_floor_keyboard,
@@ -56,7 +59,23 @@ async def send_cached_photo(
     await delete_previous_bot_message(message.bot, message.chat.id)
 
     try:
-        if filename not in MEDIA_CACHE:
+        sent_message = None
+
+        if filename in MEDIA_CACHE:
+            try:
+                sent_message = await message.answer_photo(
+                    photo=MEDIA_CACHE[filename],
+                    caption=caption,
+                    reply_markup=keyboard,
+                )
+                logging.info("[CACHE] Файл '%s' отправлен из кэша.", filename)
+            except Exception:
+                logging.warning(
+                    "[CACHE] file_id для '%s' устарел, перезагружаю файл.", filename
+                )
+                MEDIA_CACHE.pop(filename, None)
+
+        if sent_message is None:
             photo = FSInputFile(filename)
             sent_message = await message.answer_photo(
                 photo=photo,
@@ -65,13 +84,6 @@ async def send_cached_photo(
             )
             MEDIA_CACHE[filename] = sent_message.photo[-1].file_id
             logging.info("[CACHE] Файл '%s' загружен.", filename)
-        else:
-            sent_message = await message.answer_photo(
-                photo=MEDIA_CACHE[filename],
-                caption=caption,
-                reply_markup=keyboard,
-            )
-            logging.info("[CACHE] Файл '%s' отправлен из кэша.", filename)
 
         app_state.last_messages[message.chat.id] = sent_message.message_id
     except Exception:
@@ -152,11 +164,31 @@ async def process_map_building(callback: types.CallbackQuery) -> None:
         await safe_answer(callback)
         return
 
-    title, floors = BUILDINGS[building]
+    title, floors, per_row = BUILDINGS[building]
     await send_text_menu(
         callback.message,
         BUILDING_MENU_TEXT.format(title=title),
-        get_building_keyboard(building, floors),
+        get_building_keyboard(
+            building,
+            floors,
+            per_row,
+            with_auditoriums=building in {"3", "6"},
+        ),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data == "map_auditoriums", F.message.chat.type == "private")
+async def process_map_auditoriums(callback: types.CallbackQuery) -> None:
+    if has_image(AUDITORIUMS_IMAGE):
+        text = "🚪 <b>Аудитории 1–5</b>\n\n<i>Схема расположения.</i>"
+    else:
+        text = AUDITORIUMS_TEXT
+    await send_navigation_view(
+        callback.message,
+        AUDITORIUMS_IMAGE,
+        text,
+        get_auditoriums_keyboard(),
     )
     await safe_answer(callback)
 
@@ -168,7 +200,7 @@ async def process_map_floor(callback: types.CallbackQuery) -> None:
         await safe_answer(callback)
         return
 
-    title, floors = BUILDINGS[building]
+    title, floors, _ = BUILDINGS[building]
     floor = max(1, min(floors, int(raw_floor)))
     image = floor_image(building, floor)
     if has_image(image):
