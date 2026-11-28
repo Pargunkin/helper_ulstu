@@ -25,6 +25,7 @@
     <Compile Include="data\facts.py" />
     <Compile Include="data\greetings.py" />
     <Compile Include="data\menu.py" />
+    <Compile Include="data\navigation.py" />
     <Compile Include="data\quotes.py" />
     <Compile Include="data\stubs.py" />
     <Compile Include="data\weather.py" />

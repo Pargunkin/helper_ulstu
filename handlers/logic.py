@@ -12,11 +12,27 @@ from data.menu import (
     RESOURCES_MENU_TEXT,
     STUDENT_MENU_TEXT,
 )
+from data.navigation import (
+    BUILDING_MENU_TEXT,
+    BUILDINGS,
+    CAMPUS_IMAGE,
+    FLOOR_TEXT,
+    MAP_MENU_TEXT,
+    PLACES,
+    PLACE_TEXT,
+    floor_image,
+    has_image,
+    place_image,
+)
 from data.stubs import STUB_TEXTS
 from services.cache import MEDIA_CACHE
 from services.keyboards import (
     get_back_menu,
+    get_building_keyboard,
+    get_floor_keyboard,
     get_main_menu,
+    get_map_keyboard,
+    get_place_keyboard,
     get_student_back_keyboard,
     get_student_docs_keyboard,
     get_student_menu,
@@ -101,6 +117,91 @@ async def process_student_nav(callback: types.CallbackQuery) -> None:
         callback.message,
         NAV_MENU_TEXT,
         get_student_nav_keyboard(),
+    )
+    await safe_answer(callback)
+
+
+async def send_navigation_view(
+    message: types.Message,
+    image: str,
+    text: str,
+    keyboard,
+) -> None:
+    """Показывает фото со схемой, а если файла ещё нет — обычный текст."""
+    if has_image(image):
+        await send_cached_photo(message, image, text, keyboard)
+    else:
+        await send_text_menu(message, text, keyboard)
+
+
+@router.callback_query(F.data == "student_map", F.message.chat.type == "private")
+async def process_map(callback: types.CallbackQuery) -> None:
+    await send_navigation_view(
+        callback.message,
+        CAMPUS_IMAGE,
+        MAP_MENU_TEXT,
+        get_map_keyboard(),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data.startswith("map_building_"), F.message.chat.type == "private")
+async def process_map_building(callback: types.CallbackQuery) -> None:
+    building = callback.data.removeprefix("map_building_")
+    if building not in BUILDINGS:
+        await safe_answer(callback)
+        return
+
+    title, floors = BUILDINGS[building]
+    await send_text_menu(
+        callback.message,
+        BUILDING_MENU_TEXT.format(title=title),
+        get_building_keyboard(building, floors),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data.startswith("map_floor_"), F.message.chat.type == "private")
+async def process_map_floor(callback: types.CallbackQuery) -> None:
+    _, _, building, raw_floor = callback.data.split("_")
+    if building not in BUILDINGS or not raw_floor.isdigit():
+        await safe_answer(callback)
+        return
+
+    title, floors = BUILDINGS[building]
+    floor = max(1, min(floors, int(raw_floor)))
+    image = floor_image(building, floor)
+    if has_image(image):
+        text = f"🏢 <b>{title} · {floor} этаж</b>\n\n<i>Схема этажа.</i>"
+    else:
+        text = FLOOR_TEXT.format(building=title, floor=floor)
+    await send_navigation_view(
+        callback.message,
+        image,
+        text,
+        get_floor_keyboard(building),
+    )
+    await safe_answer(callback)
+
+
+@router.callback_query(F.data.startswith("map_place_"), F.message.chat.type == "private")
+async def process_map_place(callback: types.CallbackQuery) -> None:
+    place = callback.data.removeprefix("map_place_")
+    if place not in PLACES:
+        await safe_answer(callback)
+        return
+
+    title, icon = PLACES[place]
+    image = place_image(place)
+    if has_image(image):
+        text = f"{icon} <b>{title}</b>\n\n<i>Схема расположения.</i>"
+    else:
+        text = PLACE_TEXT.format(icon=icon, title=title)
+    await send_navigation_view(
+        callback.message,
+        image,
+        text,
+        get_place_keyboard(),
     )
     await safe_answer(callback)
 

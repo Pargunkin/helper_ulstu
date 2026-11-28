@@ -66,8 +66,14 @@
 ├── 🏆 Лидеры                        menu_leaders          ❌🔗 /leaderboard
 ├── 🎒 Я — первокурсник              menu_student
 │   ├── 🗺️ Навигация                 student_nav
-│   │   ├── Карта корпусов           student_map           ❌
-│   │   └── Навигация по сайту       student_site          ❌
+│   │   ├── 🗺️ Карта                 student_map           ✅ фото кампуса
+│   │   │   ├── 🏢 Корпус 3          map_building_3        ❌ 4 этажа
+│   │   │   │   └── 1–4 этаж         map_floor_3_1..4      ❌
+│   │   │   ├── 🏢 Корпус 6          map_building_6        ❌ 9 этажей
+│   │   │   │   └── 1–9 этаж         map_floor_6_1..9      ❌
+│   │   │   ├── 🏋️ Спортзал          map_place_sport       ❌
+│   │   │   └── 🛸 Фойе РЦНТК        map_place_tarelka     ❌
+│   │   └── 🌐 Навигация по сайту    student_site          ❌
 │   ├── 🔔 Звонки                    student_bell          ❌🔗 /bell
 │   ├── 💰 Стипендии и матпомощь     student_scholarship   ❌
 │   ├── 🏃 Физкультура               student_sport         ❌
