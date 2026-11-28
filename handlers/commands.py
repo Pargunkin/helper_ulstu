@@ -7,7 +7,10 @@ from aiogram import F, Router, types
 from aiogram.filters import Command
 
 from data.emoji import WEATHER_EMOJIS
-from data.texts import FACTS, GREETINGS, QUOTES, WMO_CODES
+from data.facts import FACTS
+from data.greetings import GREETINGS
+from data.quotes import QUOTES
+from data.weather import WMO_CODES
 from handlers.logic import send_cached_photo
 from services.keyboards import get_back_menu
 from services.utils import delete_previous_bot_message, safe_delete
@@ -20,7 +23,7 @@ router = Router()
 @router.message(Command("about"), F.chat.type == "private")
 async def cmd_about(message: types.Message):
     text = (
-        "<tg-emoji emoji-id='5422439311196834318'>💡</tg-emoji> <b>«Студпомощник»</b> — <b>удобный карманный справочник</b> для <i>абитуриентов</i> и <i>первокурсников</i> <a href='https://ulstu.ru'>УлГТУ</a>. Он решает проблему разрозненной и сложной подачи информации: <b>вместо долгих поисков по сайту</b> или <b>неловких вопросов куратору</b>, студент получает <b>чёткие пошаговые инструкции</b> прямо в мессенджере.\n\n"
+        "<tg-emoji emoji-id='5422439311196834318'>💡</tg-emoji> <b>«Студпомощник»</b> — <b>удобный карманный справочник</b> для <b>первокурсников</b> <a href='https://ulstu.ru'>УлГТУ</a>. Он решает проблему разрозненной и сложной подачи информации: <b>вместо долгих поисков по сайту</b> или <b>неловких вопросов куратору</b>, студент получает <b>чёткие пошаговые инструкции</b> прямо в мессенджере.\n\n"
         "<tg-emoji emoji-id='5325547803936572038'>✨</tg-emoji> <b>Команда:</b> <a href='https://t.me/daikuuu'>Паргунькин</a>, <a href='https://t.me/ramiskooo'>Хусейнов</a>, <a href='https://t.me/Arthur_Krm'>Каримов</a>, <a href='https://t.me/k0lhozn1ck'>Романов</a>\n"
         "<tg-emoji emoji-id='5447410659077661506'>🌐</tg-emoji> <b>Ссылка:</b> <a href='https://t.me/helper_ulstu_bot'>@helper_ulstu_bot</a>\n"
         "<tg-emoji emoji-id='5341715473882955310'>⚙️</tg-emoji> <b>Версия:</b> 0.7.2, бета–тест"

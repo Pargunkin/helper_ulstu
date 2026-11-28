@@ -1,7 +1,6 @@
 from aiogram import types
 
 from data.emoji import (
-    ICON_ABITUR,
     ICON_BACK,
     ICON_BACK_FAQ,
     ICON_BOOK,
@@ -12,6 +11,7 @@ from data.emoji import (
     ICON_FAQ,
     ICON_GUIDE,
     ICON_HELP,
+    ICON_LEADERS,
     ICON_NEXT,
     ICON_OS_BACK,
     ICON_PREV,
@@ -22,47 +22,36 @@ from data.emoji import (
     ICON_SMILE,
     ICON_SPORT,
     ICON_STUDENT,
+    ICON_STUDENT_CENTER,
     ICON_TRANSFER,
     ICON_TRANSLATE,
     ICON_WIFI,
 )
-from data.wifi_guides import OS_ORDER, WIFI_OS
+from data.faq.wifi_guide import OS_ORDER, WIFI_OS
+
+STUDENT_CENTER_URL = "https://ulstu.ru/for_student/cos/"
 
 def get_main_menu():
     kb = [
         [
             types.InlineKeyboardButton(
-                text="Я — абитуриент", 
-                callback_data="menu_abitur",
-                icon_custom_emoji_id=ICON_ABITUR
-            )
-        ],
-        [
-            types.InlineKeyboardButton(
-                text="Я — первокурсник", 
+                text="Я — первокурсник",
                 callback_data="menu_student",
                 icon_custom_emoji_id=ICON_STUDENT
             )
         ],
         [
             types.InlineKeyboardButton(
-                text="FAQ", 
+                text="FAQ",
                 callback_data="menu_faq",
                 icon_custom_emoji_id=ICON_FAQ
             )
-        ]
-    ]
-    return types.InlineKeyboardMarkup(inline_keyboard=kb)
-
-def get_abitur_menu():
-    kb = [
-        [types.InlineKeyboardButton(text="📊 Проходные баллы", callback_data="abitur_balls")],
-        [types.InlineKeyboardButton(text="📄 Документы", callback_data="abitur_docs")],
+        ],
         [
             types.InlineKeyboardButton(
-                text="Назад в меню", 
-                callback_data="menu_main",
-                icon_custom_emoji_id=ICON_BACK
+                text="Лидеры",
+                callback_data="menu_leaders",
+                icon_custom_emoji_id=ICON_LEADERS
             )
         ]
     ]
@@ -360,6 +349,13 @@ def get_faq_academic_keyboard():
                 text="Как не отчислиться?",
                 callback_data="faq_expelled",
                 icon_custom_emoji_id=ICON_EXPELLED
+            )
+        ],
+        [
+            types.InlineKeyboardButton(
+                text="Центр обслуживания студентов",
+                url=STUDENT_CENTER_URL,
+                icon_custom_emoji_id=ICON_STUDENT_CENTER
             )
         ]
     ]

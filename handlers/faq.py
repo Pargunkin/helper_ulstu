@@ -1,8 +1,9 @@
 from aiogram import F, Router, types
 from aiogram.exceptions import TelegramBadRequest
 
-from data.texts import FAQ_TEXTS
-from data.wifi_guides import WIFI_GUIDES, guide_menu_text, step_text
+from data.faq import FAQ_TEXTS
+from data.faq.wifi_guide import WIFI_GUIDES
+from services.wifi_guide import guide_menu_text, step_text
 from services.keyboards import (
     get_faq_academic_keyboard,
     get_faq_back_button,

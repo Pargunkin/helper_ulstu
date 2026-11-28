@@ -5,10 +5,10 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile
 
-from data.texts import MAIN_MENU_TEXT
+from data.menu import MAIN_MENU_TEXT
+from data.stubs import STUB_TEXTS
 from services.cache import MEDIA_CACHE
 from services.keyboards import (
-    get_abitur_menu,
     get_back_menu,
     get_main_menu,
     get_student_menu,
@@ -75,16 +75,6 @@ async def cmd_start(message: types.Message, state: FSMContext) -> None:
     await send_main_menu(message, MAIN_MENU_TEXT)
 
 
-@router.callback_query(F.data == "menu_abitur", F.message.chat.type == "private")
-async def process_abitur(callback: types.CallbackQuery) -> None:
-    await send_text_menu(
-        callback.message,
-        "🎓 Раздел для абитуриентов. Что вас интересует?",
-        get_abitur_menu(),
-    )
-    await safe_answer(callback)
-
-
 @router.callback_query(F.data == "menu_student", F.message.chat.type == "private")
 async def process_student(callback: types.CallbackQuery) -> None:
     await send_text_menu(
@@ -105,20 +95,13 @@ async def process_back(callback: types.CallbackQuery, state: FSMContext) -> None
 
 
 @router.callback_query(
-    F.data.in_({"abitur_balls", "abitur_docs", "student_nav", "student_docs"}),
+    F.data.in_(set(STUB_TEXTS)),
     F.message.chat.type == "private",
 )
 async def process_stubs(callback: types.CallbackQuery) -> None:
-    texts = {
-        "abitur_balls": "📊 Здесь скоро появится информация о проходных баллах.",
-        "abitur_docs": "📄 Здесь скоро появится чек-лист документов.",
-        "student_nav": "🗺️ Здесь скоро появится карта корпусов и поиск аудиторий.",
-        "student_docs": "📑 Здесь скоро появятся инструкции по получению справок.",
-    }
-
     await send_text_menu(
         callback.message,
-        texts.get(callback.data, "Этот раздел в разработке."),
+        STUB_TEXTS.get(callback.data, "Этот раздел в разработке."),
         get_back_menu(),
     )
     await safe_answer(callback)

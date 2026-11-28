@@ -22,8 +22,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="data\emoji.py" />
-    <Compile Include="data\texts.py" />
+    <Compile Include="data\facts.py" />
+    <Compile Include="data\greetings.py" />
+    <Compile Include="data\menu.py" />
+    <Compile Include="data\quotes.py" />
+    <Compile Include="data\stubs.py" />
+    <Compile Include="data\weather.py" />
     <Compile Include="data\__init__.py" />
+    <Compile Include="data\faq\academic.py" />
+    <Compile Include="data\faq\slang.py" />
+    <Compile Include="data\faq\student_life.py" />
+    <Compile Include="data\faq\wifi.py" />
+    <Compile Include="data\faq\wifi_guide.py" />
+    <Compile Include="data\faq\__init__.py" />
     <Compile Include="handlers\anon.py" />
     <Compile Include="handlers\__init__.py" />
     <Compile Include="services\__init__.py" />
@@ -33,7 +44,10 @@
     <Compile Include="system\config.py" />
     <Compile Include="system\console.py" />
     <Compile Include="handlers\faq.py" />
+    <Compile Include="services\cache.py" />
     <Compile Include="services\keyboards.py" />
+    <Compile Include="services\media.py" />
+    <Compile Include="services\wifi_guide.py" />
     <Compile Include="handlers\logic.py" />
     <Compile Include="system\main.py" />
     <Compile Include="state\storage.py" />
@@ -42,6 +56,7 @@
   <ItemGroup>
     <Folder Include="handlers\" />
     <Folder Include="data\" />
+    <Folder Include="data\faq\" />
     <Folder Include="state\" />
     <Folder Include="services\" />
     <Folder Include="system\" />
